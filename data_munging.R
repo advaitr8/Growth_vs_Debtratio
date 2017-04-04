@@ -102,4 +102,4 @@ df_comp <- df_temp
 df_comp <- df_comp[complete.cases(df_comp),]
 str(df_comp)
 #df_comp is the full data frame.
-#Fuck yeah motherfucker, suck my balls R.
+
