@@ -16,6 +16,7 @@ country_vector <- c("aus", "aut", "bel", "can", "deu", "dnk", "esp", "fra", "gbr
 df1 <- read.csv("data_draft1.csv", header = T)
 str(df1)
 
+
 ##Pick the necessary columns from the full dataset
 df2 <- df1 %>%
   select(quart,
@@ -23,13 +24,18 @@ df2 <- df1 %>%
          aus.b.gdp:usa.b.gdp, 
          aus.gr.gdpv:usa.gr.gdpv,
          aus.fsi:usa.fsi,
-         aus.gr.lf:usa.gr.lf)
+         aus.gr.lf:usa.gr.lf,
+         aus.excheb:usa.excheb,
+         aus.gr.pgdp:usa.gr.pgdp,
+         aus.rirl:usa.rirl)
 str(df2)
 
 #Drop Finland from the dataset
 df2 <- subset(df2, select = -c(fin.b.gdp, fin.gr.gdpv, 
-                               fin.fsi,fin.gr.lf ))
+                               fin.fsi,fin.gr.lf,fin.excheb,
+                               fin.gr.pgdp, fin.rirl))
 str(df2)
+dim(df2)
 
 #Create an interim for debt_ratio which can later be STACKED into one single column
 df_debt_ratio <- df2 %>% 
@@ -56,7 +62,6 @@ df_labor <- df2 %>%
 df_labor <- stack(df_labor)
 
 #Creating quarters repeating 16 times for each country. 
-#No clue if this motherfucker is right.
 df1$quarter
 quarter <- rep(df1$quarter, 16)
 length(quarter)
@@ -66,6 +71,19 @@ quarter[2075:2080]
 df1$quart
 time <- rep(df1$quart,16)
 
+#Create an interim for exchange rate which can later be STACKED into one single column
+df_exch <- df2 %>%
+  select(aus.excheb:usa.excheb)
+df_exch <- stack(df_exch)
+#Create an interim for interest rate which can later be STACKED into one single column
+df_interest <- df2 %>%
+  select(aus.rirl:usa.rirl)
+df_interest <- stack(df_interest)
+#Create an interim for inflation rate which can later be STACKED into one single column
+df_inflate <- df2 %>%
+  select(aus.gr.pgdp:usa.gr.pgdp)
+df_inflate <- stack(df_inflate)
+
 #Combine Quarter, ID, GDP, FSI, LF into one Dataframe
 df_comp <- data.frame(time = time,
                       quarter = quarter,
@@ -73,13 +91,17 @@ df_comp <- data.frame(time = time,
                       growth_rate = df_growth_rate$values,
                       debt_to_gdp = df_debt_ratio$values,
                       fin_stress = df_fin_stress$values,
-                      labor = df_labor$values)
+                      labor = df_labor$values,
+                      exch = df_exch$values,
+                      interest = df_interest$values,
+                      inf_rate = df_inflate$values)
 str(df_comp)
 ######################################################################
 #Creating lags is required for complete df
 library(data.table)
 
 #Create df_temp to build lags
+#We need a lagged growth rate and lagged debt ratio, both lagged by one period
 df_temp <- as.data.table(df_comp)
 df_temp$growth_lag <- rep(0,2080)
 df_temp$debt_lag <- rep(0,2080)
@@ -97,8 +119,7 @@ foo  <- df_temp %>%
 
 df_comp <- df_temp
 
-
-
+#Get rid of NA's
 df_comp <- df_comp[complete.cases(df_comp),]
 str(df_comp)
 #df_comp is the full data frame.
