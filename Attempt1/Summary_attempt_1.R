@@ -289,7 +289,7 @@ for(i in 1:16){
 #               chains = 3)
 # print(fit_3, digits = 4)
 
-#This bitch don't work.
+#This model don't work.
 
 #######################################################################
 #Model 4

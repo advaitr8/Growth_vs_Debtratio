@@ -1,12 +1,12 @@
 rm(list = ls())
-install.packages("broom", dependencies = T)
+#install.packages("broom", dependencies = T)
 library(broom)
 library(foreign)
 library(dplyr)
 library(rstan)
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
-setwd("/Users/Advait/Desktop/New_School/Christian.paper/Code")
+setwd("/Users/Advait/Desktop/New_School/Christian.paper/Growth_vs_Debtratio")
 getwd()
 list.files()
 #Make a country vector for desired countries
@@ -71,6 +71,12 @@ quarter[2075:2080]
 df1$quart
 time <- rep(df1$quart,16)
 
+#Creating time id variable
+t_id <- c(rep(1, times = 3), 
+          rep((2:32), each = 4),
+          rep(33, times = 3))
+t_id <- rep(t_id, 16)
+
 #Create an interim for exchange rate which can later be STACKED into one single column
 df_exch <- df2 %>%
   select(aus.excheb:usa.excheb)
@@ -86,6 +92,7 @@ df_inflate <- stack(df_inflate)
 
 #Combine Quarter, ID, GDP, FSI, LF into one Dataframe
 df_comp <- data.frame(time = time,
+                      t_id = t_id,
                       quarter = quarter,
                       country_id = df_debt_ratio$c_id,
                       growth_rate = df_growth_rate$values,
