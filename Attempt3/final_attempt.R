@@ -28,7 +28,10 @@ for(i in 1:1930){
 #The financial stress id is created here
 
 ###########################
-#However the trend in ATTEMPT 1 appears to be because most of the data is concentrated at data points which correspond to financial stress levels at 2 and 3. Since this is where the most data is, the posteriors appear to be less variant here.
+#However the trend in ATTEMPT 1 appears to be because most of 
+# the data is concentrated at data points which correspond to 
+# financial stress levels at 2 and 3. Since this is where the 
+# most data is, the posteriors appear to be less variant here.
 ###########################
 
 ####Check in which finanancial stress bracket the most data points are
