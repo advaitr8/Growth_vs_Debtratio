@@ -80,6 +80,31 @@ fs_id <- df_comp$fs_id
 # country
 # time
 # financial stress level
+#######################################################################
+
+#growth = beta_0 
+          # + beta_fs[fs_id[i]]
+          # + growth_lag[i] 
+          # + beta_debt[country_id[i]]*debt_lag[i] 
+          # + beta_labor*labor[i]
+          # + beta_exch*exch[i] 
+          # + beta_int*int[i]
+          # + beta_inf*inf[i]
 
 
 
+length(growth)
+stanc("model1_attempt3.stan")
+fit_1 <- stan("model1_attempt3.stan",
+              data = list("growth",
+                          "growth_lag",
+                          "debt_lag",
+                          "labor",
+                          "country_id",
+                          "exch",
+                          "inf_rate",
+                          "interest"),
+              iter = 1000,
+              chains = 3)
+print(fit_1, digits = 3)
+#include fs_id

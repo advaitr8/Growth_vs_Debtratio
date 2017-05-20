@@ -179,7 +179,8 @@ for(i in 1:16){
 
 #######################################################################
 #Model 2 Data manipulation
-#growth = country_int + growth_lag + low_thresh_int(2.27) + high_thresh_int(2.27) + debt_gdp_lag + labor
+#growth = country_int + growth_lag + low_thresh_int(2.27) + high_thresh_int(2.27) 
+# +debt_gdp_lag + labor
 ###
 df_dupl2 <- df_comp
 str(df_dupl2)
